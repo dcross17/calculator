@@ -7,128 +7,76 @@ export default function Button({
   setCurrentNumber,
   setExpression,
 }) {
-  const expElements = expression.split(" ");
-  const lastElement = expElements.at(-1);
+
+  const lastElement = expression.at(-1);
   const operators = ["+", "-", "*", "/"];
 
   const handleNumber = () => {
-    //debugger;
-    if (currentNumber == "0") {
-      setCurrentNumber(`${label}`);
-      return;
-    }
 
-    if(currentNumber.includes(".")){
-        setCurrentNumber(`${currentNumber}${label}`);
-        setExpression(`${expression}${label}`);
-        return;
-    }
-
-    console.log(expElements, lastElement);
-    if (expElements.length > 1) {
-        if (isNaN(lastElement)) {
-            // If the last element is not a number, start a new number
-            console.log("new number", expression, label);
-            //setCurrentNumber(`${label}`);
-            // Reset expression and set current number to the new number if last element is '='
-            if (lastElement == "=") {
-                setCurrentNumber(`${label}`);
-                setExpression("");
-                return;
-            }
-            //return;
-            setCurrentNumber(`${label}`);
-            setExpression(`${expression} ${label}`);
+    // TODO: handle numbers being added to the expression
+    // [x] : Start new number when expression is empty
+    // [x] : Add number to current number
+    console.log(expression.length, currentNumber);
+        // if the expression is empty, start a new number
+        if(currentNumber == ''){
+            setCurrentNumber(label);
         }
+        // else if current number is already being formed, append label to it
         else{
-            setCurrentNumber(`${currentNumber}${label}`);
-            setExpression(`${expression}${label}`);
-        } 
-    } else {
-        // If the expression length is 1 or less, just append the label to the current number
-        setCurrentNumber(`${currentNumber}${label}`);
-        //setExpression(`${expression}${label}`);
-    }
+            console.log('here', currentNumber);
+            setCurrentNumber(currentNumber + label);
+        }
   };
 
   const handleOperator = () => {
-    if (expression.length == 0 || expression.includes("=")) {
-      setExpression(`${currentNumber} ${label}`);
-    } else if (expression.split(" ").length > 1) {
-      if (operators.includes(lastElement)) {
-        console.log("operator already exists");
-        setExpression(`${currentNumber} ${label}`);
-      } else {
-        console.log("adding operator", expression, currentNumber, label);
-        setExpression(`${currentNumber} ${label}`);
-      }
-    } else {
-      setExpression(`${expression} ${label}`);
+    // TODO: handle operators being added to the expression
+    // [ ] : Add operator to the expression
+    // [ ] : Start new number after operator has been added
+
+    // operators are only added if the current number is not empty
+    // operators are only added if the last element of the expression is not an operator
+
+    if(expression.length == 0){
+        // if expression and current number are empty, have calculator add 0 with operator
+        if (currentNumber == '') {
+            setCurrentNumber('0');
+            setExpression(['0', label]); 
+        }
+        setExpression([...expression, currentNumber, label]);
+        // clear current number after adding it to the expression
+        setCurrentNumber('');
     }
+    else{
+        // if expresison is not empty ...
+        console.log('Last element', lastElement);
+        if(operators.includes(lastElement) && currentNumber == ''){
+            // if the last element is an operator, replace it with the new operator
+            // TODO: 
+            // [ ] : handle the case where the user wants to change the operator but current number already exists
+            setExpression(expression.slice(0, -1).concat(label));
+        }
+        // if the last element is a number but expression already has an operator
+        // do nothing
+        /*else if (operators.some(op => expression.includes(op))) {
+            console.log('operator already exists');
+            return;
+        }*/
+        else{
+            console.log('Adding operator');
+            setExpression([...expression, currentNumber, label]);
+        }
+    }
+
   };
 
   const handleEquals = () => {
-    // Determine what to do when the equals button is pressed
-    if (operators.includes(lastElement)) {
-      //example: 1 + -> 1 + 1 =
-      console.log(
-        `${expElements.slice(0, 2).join(" ")} ${currentNumber} ${label}`
-      );
-      setExpression(
-        `${expElements.slice(0, 2).join(" ")} ${currentNumber} ${label}`
-      );
-      return;
-    }
-    if (
-      operators.some((op) => expression.includes(op)) &&
-      expElements.includes("=")
-    ) {
-      // if the last element is an operator and equals already exists,
-      console.log(
-        `${expElements.slice(0, 3).join(" ")} ${expElements
-          .slice(1, 3)
-          .join(" ")} ${label}`
-      );
-      setExpression(
-        `${expElements.slice(0, 3).join(" ")} ${expElements
-          .slice(1, 3)
-          .join(" ")} ${label}`
-      );
-      return;
-    }
+    
 
-    setExpression(`${expression} ${label}`);
-  };
+ };
+
 
   const handleDecimal = () => {
-    // if there is already a decimal point, return
-    if (expElements.length > 1) {
-        if (isNaN(lastElement)) {
-            // If the last element is not a number, start a new number
-            console.log("new number with decimal", expression, label);
-            //setCurrentNumber(`${label}`);
-            // Reset expression and set current number to the new number if last element is '='
-            if (lastElement == "=") {
-                setCurrentNumber(`0.`);
-                setExpression("");
-                return;
-            }
-            //return;
-            setCurrentNumber(`${label}`);
-            setExpression(`${expression} ${label}`);
-        }
-        else{
-            setCurrentNumber(`${currentNumber}${label}`);
-            setExpression(`${expression}${label}`);
-        } 
-    } else {
-        // If the expression length is 1 or less, just append the label to the current number
-        setCurrentNumber(`${currentNumber}${label}`);
-        //setExpression(`${expression}${label}`);
-    }
-    //debugger;
-    setCurrentNumber(`${currentNumber}${label}`);
-    setExpression(`${expression} ${currentNumber}${label}`);
+ 
   };
 
   const renderLabel = (label) => {

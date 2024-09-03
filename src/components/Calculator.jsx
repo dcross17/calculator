@@ -5,11 +5,12 @@ import Button from "./Button";
 export default function Calculator() {
     // stack is the current stack of the calculation
     // currentNumber is the number that will be calculated
-    const [currentNumber, setCurrentNumber] = useState('0');
-    const [expression, setExpression] = useState('');
+    const [currentNumber, setCurrentNumber] = useState('');
+    const [expression, setExpression] = useState([]);
 
     // useEffect to calculate the expression everytime the expression changes
     useEffect(() => {
+        console.log('Expression', expression);
         calculateExpression(expression);
     }, [expression]);
 
@@ -18,49 +19,49 @@ export default function Calculator() {
             setCurrentNumber('0');
             return;
         }*/
-        let stack = expression.split(' ');
-        stack = checkTrailingDecimals(stack);
-        console.log(stack, stack.length);
-        let operators = ['+','-','*','/', '='];
-        if(stack.length >= 4){
-            let result = stack[0];
-            let operator = stack[1];
+        // let stack = expression.split(' ');
+        // stack = checkTrailingDecimals(stack);
+        // console.log(stack, stack.length);
+        // let operators = ['+','-','*','/', '='];
+        // if(stack.length >= 4){
+        //     let result = stack[0];
+        //     let operator = stack[1];
 
-            if(operators.includes(operator)){
-                let operand1 = parseFloat(stack[0]);
-                let operand2 = parseFloat(stack[2]);
+        //     if(operators.includes(operator)){
+        //         let operand1 = parseFloat(stack[0]);
+        //         let operand2 = parseFloat(stack[2]);
 
-                switch(operator){
-                    case '+':
-                        result = operand1 + operand2;
-                        break;
-                    case '-':
-                        result = operand1 - operand2;
-                        break;
-                    case '*':
-                        result = operand1 * operand2;
-                        break;
-                    case '/':
-                        // TODO: handle dividing by zero
-                        result = operand1 / operand2;
-                        break;
-                }
-            }
-        console.log(result);
-        if(expression.includes('=')){
-            setCurrentNumber(`${result}`);
-            // this is for when the user presses equals multiple times
-            // it will keep the result and the last operator
-            if(stack.length >= 6){
-                setExpression(`${result} ${stack.slice(-3).join(' ')}`);
-            }
-        }
-        else{
-            console.log(result, expression)
-            setCurrentNumber(`${result}`);
-            setExpression(`${result} ${stack.at(-1)}`);
-        }
-        }
+        //         switch(operator){
+        //             case '+':
+        //                 result = operand1 + operand2;
+        //                 break;
+        //             case '-':
+        //                 result = operand1 - operand2;
+        //                 break;
+        //             case '*':
+        //                 result = operand1 * operand2;
+        //                 break;
+        //             case '/':
+        //                 // TODO: handle dividing by zero
+        //                 result = operand1 / operand2;
+        //                 break;
+        //         }
+        //     }
+        // console.log(result);
+        // if(expression.includes('=')){
+        //     setCurrentNumber(`${result}`);
+        //     // this is for when the user presses equals multiple times
+        //     // it will keep the result and the last operator
+        //     if(stack.length >= 6){
+        //         setExpression(`${result} ${stack.slice(-3).join(' ')}`);
+        //     }
+        // }
+        // else{
+        //     console.log(result, expression)
+        //     setCurrentNumber(`${result}`);
+        //     setExpression(`${result} ${stack.at(-1)}`);
+        // }
+        // }
         
     }
 
