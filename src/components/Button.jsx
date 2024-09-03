@@ -20,11 +20,17 @@ export default function Button({
         // if the expression is empty, start a new number
         if(currentNumber == ''){
             setCurrentNumber(label);
+            
         }
         // else if current number is already being formed, append label to it
         else{
-            console.log('here', currentNumber);
-            setCurrentNumber(currentNumber + label);
+            if(currentNumber.at(0) == '0'){
+                setCurrentNumber(label);
+            }
+            else{
+              console.log('here', currentNumber);
+              setCurrentNumber(currentNumber + label);
+            }
         }
   };
 
@@ -55,12 +61,7 @@ export default function Button({
             // [ ] : handle the case where the user wants to change the operator but current number already exists
             setExpression(expression.slice(0, -1).concat(label));
         }
-        // if the last element is a number but expression already has an operator
-        // do nothing
-        /*else if (operators.some(op => expression.includes(op))) {
-            console.log('operator already exists');
-            return;
-        }*/
+        // when app re renders, expression will automaticall calculate the result if expression.length > 3
         else{
             console.log('Adding operator');
             setExpression([...expression, currentNumber, label]);
@@ -70,7 +71,12 @@ export default function Button({
   };
 
   const handleEquals = () => {
-    
+    if(currentNumber == ''){
+
+    }
+    else{
+        setExpression([...expression, currentNumber, '=']);
+    }
 
  };
 

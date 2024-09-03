@@ -6,6 +6,7 @@ export default function Calculator() {
     // stack is the current stack of the calculation
     // currentNumber is the number that will be calculated
     const [currentNumber, setCurrentNumber] = useState('');
+    const [displayNumber, setDisplayNumber] = useState('0');
     const [expression, setExpression] = useState([]);
 
     // useEffect to calculate the expression everytime the expression changes
@@ -19,71 +20,69 @@ export default function Calculator() {
             setCurrentNumber('0');
             return;
         }*/
-        // let stack = expression.split(' ');
-        // stack = checkTrailingDecimals(stack);
-        // console.log(stack, stack.length);
-        // let operators = ['+','-','*','/', '='];
-        // if(stack.length >= 4){
-        //     let result = stack[0];
-        //     let operator = stack[1];
+        checkTrailingDecimals();
+        console.log(expression, expression.length);
+        let operators = ['+','-','*','/', '='];
+        if(expression.length >= 4){
+            let result = expression[0];
+            let operator = expression[1];
 
-        //     if(operators.includes(operator)){
-        //         let operand1 = parseFloat(stack[0]);
-        //         let operand2 = parseFloat(stack[2]);
+            if(operators.includes(operator)){
+                let operand1 = parseFloat(expression[0]);
+                let operand2 = parseFloat(expression[2]);
 
-        //         switch(operator){
-        //             case '+':
-        //                 result = operand1 + operand2;
-        //                 break;
-        //             case '-':
-        //                 result = operand1 - operand2;
-        //                 break;
-        //             case '*':
-        //                 result = operand1 * operand2;
-        //                 break;
-        //             case '/':
-        //                 // TODO: handle dividing by zero
-        //                 result = operand1 / operand2;
-        //                 break;
-        //         }
-        //     }
-        // console.log(result);
-        // if(expression.includes('=')){
-        //     setCurrentNumber(`${result}`);
-        //     // this is for when the user presses equals multiple times
-        //     // it will keep the result and the last operator
-        //     if(stack.length >= 6){
-        //         setExpression(`${result} ${stack.slice(-3).join(' ')}`);
-        //     }
-        // }
-        // else{
-        //     console.log(result, expression)
-        //     setCurrentNumber(`${result}`);
-        //     setExpression(`${result} ${stack.at(-1)}`);
-        // }
-        // }
+                switch(operator){
+                    case '+':
+                        result = operand1 + operand2;
+                        break;
+                    case '-':
+                        result = operand1 - operand2;
+                        break;
+                    case '*':
+                        result = operand1 * operand2;
+                        break;
+                    case '/':
+                        // TODO: handle dividing by zero
+                        result = operand1 / operand2;
+                        break;
+                }
+            }
+        console.log(result);
+        if(expression.includes('=')){
+            setDisplayNumber(`${result}`);
+            // this is for when the user presses equals multiple times
+            // it will keep the result and the last operator
+            if(expression.length >= 6){
+                setExpression(`${result} ${expression.slice(-3).join(' ')}`);
+            }
+        }
+        else{
+            console.log(result, expression)
+            setCurrentNumber(`${result}`);
+            setExpression(`${result} ${expression.at(-1)}`);
+        }
+        }
         
     }
 
-    const checkTrailingDecimals = (stack) => {
-        if(stack.length == 0){
+    const checkTrailingDecimals = () => {
+        if(expression.length == 0){
             return;
         }
 
-        if(stack.length > 1){
+        if(expression.length > 1){
             // check if the first number has a trailing decimal point
-            if(stack[0].at(-1) === '.'){
-                stack[0] = stack[0].replace('.','');
+            if(expression[0].at(-1) === '.'){
+                expression[0] = expression[0].replace('.','');
             }
             // check if the second number has a trailing decimal point
-            if(typeof stack[2] !== 'undefined'){
-                if(stack[2].at(-1) === '.'){
-                    stack[2] = stack[2].replace('.','');
+            if(typeof expression[2] !== 'undefined'){
+                if(expression[2].at(-1) === '.'){
+                    expression[2] = expression[2].replace('.','');
                 }
             }
         }
-        setExpression(stack.join(' '));
-        return stack;
+        setExpression([...expression]);
     }
 
     //use a map to preserve the order of the buttons
@@ -118,7 +117,7 @@ export default function Calculator() {
 
     return (
         <div className="max-w-sm container">
-            <Display currentNumber = {currentNumber} expression = {expression} />
+            <Display displayNumber = {displayNumber} currentNumber = {currentNumber} expression = {expression} />
             <div className = "grid grid-cols-4 gap-2">
                 {Array.from(buttons.entries()).map(([key, type]) => 
                 {
