@@ -7,30 +7,50 @@ export default function Calculator() {
     // currentNumber is the number that will be calculated
     const [currentNumber, setCurrentNumber] = useState('');
     const [displayNumber, setDisplayNumber] = useState('0');
+    const [calcReady, setCalcReady] = useState(false);
     const [expression, setExpression] = useState([]);
-
+    const operators = ['+','-','*','/'];
+    const numberToUse = currentNumber === '' ? displayNumber : currentNumber;
     // useEffect to calculate the expression everytime the expression changes
     useEffect(() => {
-        console.log('Expression', expression);
-        calculateExpression(expression);
-    }, [expression]);
+        console.log(expression.length)
+        if(calcReady || expression.length > 3){
+            console.log('Expression', expression);
+            constructExpression();
+            calculateExpression(expression);
+        }
+    }, [calcReady, expression]);
+
+    const constructExpression = () => {
+        // Ex. '1 + =' -> '1 + 1 ='
+        let operand1 = parseFloat(expression[0]);
+        let operand2 = parseFloat(expression[2]);
+
+        if(currentNumber === '' && expression.length > 0){
+            //replace first number with displayNumber
+            expression[0] = numberToUse;
+            setExpression([...expression]);
+        }
+
+        /*if(isNaN(operand2)){
+            //Ex. '1 + ' -> '1 + 1'
+            operand2 = operand1;
+        }
+        setExpression([operand1, operator, operand2]);*/
+
+        checkTrailingDecimals();
+    }
 
     const calculateExpression = (expression) => {
-        /*if(expression.length == 0){
-            setCurrentNumber('0');
-            return;
-        }*/
-        checkTrailingDecimals();
+        
         console.log(expression, expression.length);
-        let operators = ['+','-','*','/', '='];
-        if(expression.length >= 4){
+        
             let result = expression[0];
             let operator = expression[1];
 
             if(operators.includes(operator)){
                 let operand1 = parseFloat(expression[0]);
                 let operand2 = parseFloat(expression[2]);
-
                 switch(operator){
                     case '+':
                         result = operand1 + operand2;
@@ -48,21 +68,12 @@ export default function Calculator() {
                 }
             }
         console.log(result);
-        if(expression.includes('=')){
-            setDisplayNumber(`${result}`);
-            // this is for when the user presses equals multiple times
-            // it will keep the result and the last operator
-            if(expression.length >= 6){
-                setExpression(`${result} ${expression.slice(-3).join(' ')}`);
-            }
-        }
-        else{
-            console.log(result, expression)
-            setCurrentNumber(`${result}`);
-            setExpression(`${result} ${expression.at(-1)}`);
-        }
-        }
         
+        // after calculation, display the result and clear the current number for next
+        // and then setCalcReady to false to prevent the useEffect from running again
+        setCurrentNumber('');
+        setDisplayNumber(`${result}`);
+        setCalcReady(false);
     }
 
     const checkTrailingDecimals = () => {
@@ -121,7 +132,7 @@ export default function Calculator() {
             <div className = "grid grid-cols-4 gap-2">
                 {Array.from(buttons.entries()).map(([key, type]) => 
                 {
-                    return <Button key = {key} label = {key} type = {type}  currentNumber = {currentNumber} setCurrentNumber = {setCurrentNumber} expression = {expression} setExpression = {setExpression} />
+                    return <Button key = {key} label = {key} type = {type}  currentNumber = {currentNumber} setCurrentNumber = {setCurrentNumber} expression = {expression} setExpression = {setExpression} setCalcReady = {setCalcReady} />
                 }
             )}
             </div>

@@ -6,32 +6,29 @@ export default function Button({
   currentNumber,
   setCurrentNumber,
   setExpression,
+  setCalcReady,
 }) {
-
   const lastElement = expression.at(-1);
   const operators = ["+", "-", "*", "/"];
 
   const handleNumber = () => {
-
     // TODO: handle numbers being added to the expression
     // [x] : Start new number when expression is empty
     // [x] : Add number to current number
     console.log(expression.length, currentNumber);
-        // if the expression is empty, start a new number
-        if(currentNumber == ''){
-            setCurrentNumber(label);
-            
-        }
-        // else if current number is already being formed, append label to it
-        else{
-            if(currentNumber.at(0) == '0'){
-                setCurrentNumber(label);
-            }
-            else{
-              console.log('here', currentNumber);
-              setCurrentNumber(currentNumber + label);
-            }
-        }
+    // if the expression is empty, start a new number
+    if (currentNumber == "") {
+      setCurrentNumber(label);
+    }
+    // else if current number is already being formed, append label to it
+    else {
+      if (currentNumber.at(0) == "0") {
+        setCurrentNumber(label);
+      } else {
+        console.log("here", currentNumber);
+        setCurrentNumber(currentNumber + label);
+      }
+    }
   };
 
   const handleOperator = () => {
@@ -42,48 +39,36 @@ export default function Button({
     // operators are only added if the current number is not empty
     // operators are only added if the last element of the expression is not an operator
 
-    if(expression.length == 0){
-        // if expression and current number are empty, have calculator add 0 with operator
-        if (currentNumber == '') {
-            setCurrentNumber('0');
-            setExpression(['0', label]); 
-        }
+    if (expression.length == 0) {
+      // if expression and current number are empty, have calculator add 0 with operator
+      if (currentNumber == "") {
+        setCurrentNumber("0");
+        setExpression(["0", label]);
+      }
+      setExpression([...expression, currentNumber, label]);
+    } else {
+      // if expresison is not empty ...
+      console.log("Last element", lastElement);
+      if (operators.includes(lastElement) && currentNumber == "") {
+        // if the last element is an operator, replace it with the new operator
+        // TODO:
+        // [ ] : handle the case where the user wants to change the operator but current number already exists
+        setExpression(expression.slice(0, -1).concat(label));
+      } else {
+        console.log("Adding operator");
         setExpression([...expression, currentNumber, label]);
-        // clear current number after adding it to the expression
-        setCurrentNumber('');
+        console.log(expression.length, expression);
+      }
     }
-    else{
-        // if expresison is not empty ...
-        console.log('Last element', lastElement);
-        if(operators.includes(lastElement) && currentNumber == ''){
-            // if the last element is an operator, replace it with the new operator
-            // TODO: 
-            // [ ] : handle the case where the user wants to change the operator but current number already exists
-            setExpression(expression.slice(0, -1).concat(label));
-        }
-        // when app re renders, expression will automaticall calculate the result if expression.length > 3
-        else{
-            console.log('Adding operator');
-            setExpression([...expression, currentNumber, label]);
-        }
-    }
-
+    setCurrentNumber('');
   };
 
   const handleEquals = () => {
-    if(currentNumber == ''){
-
-    }
-    else{
-        setExpression([...expression, currentNumber, '=']);
-    }
-
- };
-
-
-  const handleDecimal = () => {
- 
+    setExpression([...expression, currentNumber, "="]);
+    setCalcReady(true);
   };
+
+  const handleDecimal = () => {};
 
   const renderLabel = (label) => {
     if (label == "DEL") {
